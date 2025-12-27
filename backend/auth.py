@@ -6,7 +6,12 @@ SECRET_KEY = "supersecretkey"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
 
-pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
+# Support both old (pbkdf2_sha512) and new (pbkdf2_sha256) hashing algorithms
+# New passwords will use pbkdf2_sha256; old passwords using pbkdf2_sha512 can still be verified
+pwd_context = CryptContext(
+    schemes=["pbkdf2_sha256", "pbkdf2_sha512"],
+    deprecated="pbkdf2_sha512"
+)
 
 
 def get_password_hash(password: str) -> str:
