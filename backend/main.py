@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlmodel import Session, select
 from dotenv import load_dotenv
+from uuid import uuid4
 import os
 import time
 import json
@@ -151,25 +152,27 @@ def list_bots(
 # -------------------------------------------------
 # CHAT
 # -------------------------------------------------
+
 @app.post("/bots/{bot_id}/sessions")
 def create_session(
     bot_id: int,
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
 ):
-    bot = db.get(Bot, bot_id)
-    if not bot:
-        raise HTTPException(status_code=404, detail="Bot not found")
+    conv = Conversation(
+        bot_id=bot_id,
+        session_id=str(uuid4())
+    )
 
-    conv = Conversation(bot_id=bot_id)
     db.add(conv)
     db.commit()
-    db.refresh(conv)
+    # ❌ DO NOT call db.refresh(conv) with SQLite
 
     return {
         "conversation_id": conv.id,
         "session_id": conv.session_id,
     }
+
 
 
 @app.post("/bots/{bot_id}/sessions/{session_id}/message")
@@ -198,25 +201,35 @@ def send_message(
     )
     db.commit()
 
+    # ✅ ADDED ERROR HANDLING HERE
     t0 = time.time()
-    response = genai_client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=message,
-    )
-    latency_ms = int((time.time() - t0) * 1000)
+    try:
+        response = genai_client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=message,
+        )
+        reply_text = response.text
+        latency_ms = int((time.time() - t0) * 1000)
+    except Exception as e:
+        # Log the error for debugging
+        print(f"Gemini API Error: {e}")
+        
+        # Fallback response when API fails
+        reply_text = "Sorry, the AI service is temporarily unavailable. Please try again in a moment. 🤖"
+        latency_ms = int((time.time() - t0) * 1000)
 
     db.add(
         Message(
             conversation_id=conv.id,
             role="bot",
-            text=response.text,
+            text=reply_text,
             latency_ms=latency_ms,
         )
     )
     db.commit()
 
     return {
-        "reply": response.text,
+        "reply": reply_text,
         "latency_ms": latency_ms,
     }
 

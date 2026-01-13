@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional, List
 from sqlmodel import SQLModel
 from typing import Optional, Dict
@@ -10,9 +10,9 @@ class BotCreate(SQLModel):
     config: Dict = {}
 
 class UserCreate(BaseModel):
-    email: str
+    email: EmailStr
     password: str
-    name: Optional[str]
+    
 
 class Token(BaseModel):
     access_token: str
@@ -20,8 +20,9 @@ class Token(BaseModel):
 
 class BotCreate(BaseModel):
     name: str
+    model: str               # ✅ REQUIRED
     description: Optional[str] = None
-    config: Optional[dict] = {}
+    config: Dict = {}
 
 class MessageIn(BaseModel):
     message: str

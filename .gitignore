@@ -1,1 +1,24 @@
 .env 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+*.egg-info/
+.env
+
+# Backend specific
+backend/__pycache__/
+*.db
+*.sqlite3
+
+# Your private files
+chatbot.db
+test_register.py
+test.py
+
+# Don't ignore frontend folder itself
+# The frontend has its own .gitignore
