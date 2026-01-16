@@ -32,6 +32,8 @@ class Bot(SQLModel, table=True):
     name: str
     model: str = Field(nullable=False)
     description: Optional[str] = None
+    system_prompt: str = Field(default="You are a helpful assistant.")
+    temperature: float = Field(default=0.7, ge=0.0, le=2.0)
 
     settings: Dict = Field(
         default_factory=dict,

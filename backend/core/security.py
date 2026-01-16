@@ -5,6 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 from dotenv import load_dotenv
+from sqlmodel import Session
 
 load_dotenv()
 
@@ -37,16 +38,32 @@ def create_access_token(subject: str):
     payload = {"sub": subject, "exp": expire}
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
-def get_current_user(token: str = Depends(oauth2_scheme)) -> int:
+def get_current_user(
+    token: str = Depends(oauth2_scheme)
+):
+    from ..models import User
+    from ..db import engine
+    
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: str | None = payload.get("sub")
-        if user_id is None:
+        user_id: str = payload.get("sub")
+        if not user_id:
             raise HTTPException(status_code=401, detail="Invalid token")
-        return int(user_id)
+
+        # Use context manager to properly close the session
+        with Session(engine) as db:
+            user = db.get(User, int(user_id))
+            if not user:
+                raise HTTPException(status_code=401, detail="User not found")
+            
+            # Detach the user from the session so it can be used outside the context
+            db.expunge(user)
+            return user
+
     except JWTError:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired token",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise HTTPException(status_code=401, detail="Invalid token")
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"[Security] Unexpected error in get_current_user: {type(e).__name__}: {e}")
+        raise HTTPException(status_code=401, detail="Authentication failed")

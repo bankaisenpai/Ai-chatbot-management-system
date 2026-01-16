@@ -24,13 +24,17 @@ def create_bot(
     model: str,
     description: str | None,
     config: dict,
+    system_prompt: str = "You are a helpful assistant.",
+    temperature: float = 0.7,
 ):
     bot = Bot(
         owner_id=owner_id,
         name=name,
-        model=model,          # ✅ FIX
+        model=model,
         description=description,
-        settings=config,      # ✅ FIX (settings, not config)
+        system_prompt=system_prompt,
+        temperature=temperature,
+        settings=config,
     )
     session.add(bot)
     session.commit()

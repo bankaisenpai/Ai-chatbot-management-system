@@ -9,16 +9,22 @@ const bots = [
 ];
 
 export default function Dashboard() {
-  const [bot, setBot] = useState(bots[0]);
+  const [selectedBotId, setSelectedBotId] = useState(bots[0].id);
+  const selectedBot = bots.find((b) => b.id === selectedBotId) || bots[0];
+
+  const handleBotSelect = (bot) => {
+    console.log(`[Dashboard] Bot selected: ${bot.name} (id: ${bot.id})`);
+    setSelectedBotId(bot.id);
+  };
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>
       <BotSidebar
         bots={bots}
-        selected={bot}
-        onSelect={setBot}
+        selected={selectedBot}
+        onSelect={handleBotSelect}
       />
-      <Chat bot={bot} />
+      <Chat botId={selectedBotId} />
     </div>
   );
 }

@@ -1,29 +1,31 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional, List
-from sqlmodel import SQLModel
 from typing import Optional, Dict
 
-class BotCreate(SQLModel):
-    name: str
-    model: str = "gemini-2.5-flash"   # ✅ DEFAULT MODEL
-    description: Optional[str] = None
-    config: Dict = {}
-
+# -------------------------------------------------
+# User Schemas
+# -------------------------------------------------
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
-    
 
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
 
+# -------------------------------------------------
+# Bot Schemas
+# -------------------------------------------------
 class BotCreate(BaseModel):
     name: str
-    model: str               # ✅ REQUIRED
+    model: str
     description: Optional[str] = None
+    system_prompt: str = "You are a helpful assistant."
+    temperature: float = 0.7
     config: Dict = {}
 
+# -------------------------------------------------
+# Message Schemas
+# -------------------------------------------------
 class MessageIn(BaseModel):
     message: str
 
