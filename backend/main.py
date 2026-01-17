@@ -3,20 +3,19 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 
-# Load env
+# -------------------------------------------------
+# Load environment variables
+# -------------------------------------------------
 load_dotenv()
-
-# DB
-from .db import init_db
-
-# Routers
-from .routes import auth, bots, messages
 
 # -------------------------------------------------
 # App
 # -------------------------------------------------
 app = FastAPI(title="AI Chatbot Management System")
 
+# -------------------------------------------------
+# Middleware
+# -------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,14 +25,25 @@ app.add_middleware(
 )
 
 # -------------------------------------------------
+# DB & Seed (IMPORT ONLY — DO NOT EXECUTE HERE)
+# -------------------------------------------------
+from .db import init_db
+
+
+# -------------------------------------------------
 # Routers
 # -------------------------------------------------
+from .routes import auth, bots, messages
+
 app.include_router(auth.router, prefix="/auth", tags=["Auth"])
 app.include_router(bots.router, prefix="/bots", tags=["Bots"])
 app.include_router(messages.router, tags=["Messages"])
 
 # -------------------------------------------------
-# Preflight
+# Startup (RUN ONCE PER WORKER)
+# -------------------------------------------------
+# -------------------------------------------------
+# Preflight (CORS)
 # -------------------------------------------------
 @app.options("/{full_path:path}")
 async def preflight_handler(full_path: str):
@@ -52,17 +62,15 @@ async def http_exception_handler(request, exc):
 @app.exception_handler(Exception)
 async def general_exception_handler(request, exc):
     import traceback
-    print(f"[ERROR] {exc}")
+    print("[ERROR]", exc)
     print(traceback.format_exc())
-    return JSONResponse(status_code=500, content={"detail": "Internal server error"})
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Internal server error"},
+    )
 
 # -------------------------------------------------
-# DB init (ONCE)
-# -------------------------------------------------
-init_db()
-
-# -------------------------------------------------
-# Health
+# Health checks
 # -------------------------------------------------
 @app.get("/")
 def root():

@@ -32,7 +32,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     return user
 
 
-@router.post("")
+@router.post("/")
 def create_bot_api(
     payload: BotCreate,
     db: Session = Depends(get_db),
@@ -50,7 +50,7 @@ def create_bot_api(
     )
 
 
-@router.get("")
+@router.get("/")
 def list_bots(
     db: Session = Depends(get_db),
     user: User = Depends(get_current_user),
