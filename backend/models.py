@@ -56,10 +56,8 @@ class Conversation(SQLModel, table=True):
 
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
-    meta_data: Dict = Field(
-        default_factory=dict,
-        sa_column=Column(JSON)
-    )
+    metadata_json: dict = Field(default_factory=dict, sa_column=Column(JSON))
+    
 
     bot: Optional[Bot] = Relationship(back_populates="conversations")
     messages: List["Message"] = Relationship(back_populates="conversation")

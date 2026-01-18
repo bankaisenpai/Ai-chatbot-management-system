@@ -38,11 +38,17 @@ from .routes import auth, bots, messages
 app.include_router(auth.router, prefix="/auth", tags=["Auth"])
 app.include_router(bots.router, prefix="/bots", tags=["Bots"])
 app.include_router(messages.router, tags=["Messages"])
+print("✅ Bots router loaded")
 
 # -------------------------------------------------
-# Startup (RUN ONCE PER WORKER)
+# Startup (RUN ONCE)
 # -------------------------------------------------
-# -------------------------------------------------
+@app.on_event("startup")
+def on_startup():
+    print("🔹 Initializing database...")
+    init_db()
+    print("✅ Database ready")
+
 # Preflight (CORS)
 # -------------------------------------------------
 @app.options("/{full_path:path}")

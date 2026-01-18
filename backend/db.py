@@ -1,19 +1,17 @@
-from sqlmodel import SQLModel, create_engine, Session, select
-from sqlmodel.ext.asyncio.session import AsyncSession
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession as SAAsyncSession
-from sqlalchemy.pool import StaticPool
-import threading
-
+from sqlmodel import SQLModel, create_engine, Session
 import os
-from dotenv import load_dotenv
-load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./chatbot.db")
+# Always resolve DB path relative to THIS file
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "chatbot.db")
 
-# For simple local dev we use sync engine; async option commented for later
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False}, poolclass=StaticPool)
+DATABASE_URL = f"sqlite:///{DB_PATH}"
 
-lock = threading.Lock()
+engine = create_engine(
+    DATABASE_URL,
+    echo=False,
+    connect_args={"check_same_thread": False},
+)
 
 def init_db():
     SQLModel.metadata.create_all(engine)

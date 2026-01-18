@@ -67,7 +67,10 @@ def create_session(
     print(f"[DEBUG] create_session called with bot_id={bot_id}")  # ✅ Added debug log
     """Create a new chat session for a bot"""
     # Validate bot exists (owner_id can be None for public bots, or match user for private bots)
-    bot = db.get(Bot, bot_id)
+    bot = db.exec(
+    select(Bot).where(Bot.id == bot_id)
+).first()
+
     if not bot:
         raise HTTPException(status_code=404, detail="Bot not found")
 
@@ -118,7 +121,10 @@ def send_message(
     start_time = time.time()
 
     # Load bot with personality
-    bot = db.get(Bot, bot_id)
+    bot = db.exec(
+    select(Bot).where(Bot.id == bot_id)
+).first()
+
     if not bot:
         raise HTTPException(status_code=404, detail="Bot not found")
 

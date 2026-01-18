@@ -1,31 +1,37 @@
-from sqlmodel import select
-from .models import User, Bot, Conversation, Message, TrainingDataset
-from .models import Bot
+from datetime import datetime
+from sqlmodel import select, Session
 
-def create_user(session, email, password_hash):
+from .models import User, Bot
+
+
+def create_user(session: Session, email: str, password_hash: str):
     """Create a new user with hashed password"""
     user = User(
-        email=email, 
-        password_hash=password_hash
+        email=email,
+        password_hash=password_hash,
     )
     session.add(user)
     session.commit()
     session.refresh(user)
     return user
 
-def get_user_by_email(session, email):
+
+def get_user_by_email(session: Session, email: str):
     """Get user by email"""
-    return session.exec(select(User).where(User.email == email)).first()
+    return session.exec(
+        select(User).where(User.email == email)
+    ).first()
+
 
 def create_bot(
-    session,
+    session: Session,
     owner_id: int,
     name: str,
     model: str,
     description: str | None,
-    config: dict,
-    system_prompt: str = "You are a helpful assistant.",
-    temperature: float = 0.7,
+    system_prompt: str,
+    temperature: float,
+    config: dict | None = None,
 ):
     bot = Bot(
         owner_id=owner_id,
@@ -34,9 +40,12 @@ def create_bot(
         description=description,
         system_prompt=system_prompt,
         temperature=temperature,
-        settings=config,
+        settings=config or {},
+        created_at=datetime.utcnow(),
     )
+
     session.add(bot)
     session.commit()
     session.refresh(bot)
+
     return bot
