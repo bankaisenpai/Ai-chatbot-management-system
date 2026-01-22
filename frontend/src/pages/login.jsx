@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login, setToken } from "../api/auth";
+import "../Pages/login.css";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -69,117 +70,41 @@ export default function Login() {
   };
 
   return (
-    <div style={{ maxWidth: "500px", margin: "50px auto", padding: "20px", fontFamily: "Arial" }}>
-      <h2>🔐 Login</h2>
+    
+  
+    <div className="login-card">
+      <h1>Welcome Back 👋</h1>
+      <p className="subtitle">Sign in to continue</p>
 
       <form onSubmit={handleLogin}>
-        <div style={{ marginBottom: "15px" }}>
-          <label>Email:</label>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ 
-              width: "100%", 
-              padding: "10px", 
-              boxSizing: "border-box",
-              fontSize: "14px"
-            }}
-          />
-        </div>
+  <label>Email</label>
+  <input
+    type="email"
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+    placeholder="you@example.com"
+    required
+  />
 
-        <div style={{ marginBottom: "15px" }}>
-          <label>Password:</label>
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ 
-              width: "100%", 
-              padding: "10px", 
-              boxSizing: "border-box",
-              fontSize: "14px"
-            }}
-          />
-        </div>
+  <label>Password</label>
+  <input
+    type="password"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    placeholder="••••••••"
+    required
+  />
 
-        <button 
-          type="submit" 
-          disabled={loading} 
-          style={{ 
-            width: "100%", 
-            padding: "12px", 
-            fontSize: "16px",
-            backgroundColor: loading ? "#cccccc" : "#007bff",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: loading ? "not-allowed" : "pointer"
-          }}
-        >
-          {loading ? "⏳ Logging in..." : "✓ Login"}
-        </button>
-      </form>
+  <button type="submit" disabled={loading}>
+    {loading ? "⏳ Logging in..." : "Login"}
+  </button>
 
-      {error && (
-        <div style={{ 
-          color: "#721c24", 
-          backgroundColor: "#f8d7da", 
-          border: "1px solid #f5c6cb",
-          padding: "15px", 
-          marginTop: "15px", 
-          borderRadius: "4px",
-          fontSize: "14px",
-          lineHeight: "1.6"
-        }}>
-          {error}
-        </div>
-      )}
-
-      {debugInfo && (
-        <div style={{ 
-          color: "#004085", 
-          backgroundColor: "#d1ecf1", 
-          border: "1px solid #bee5eb",
-          padding: "15px", 
-          marginTop: "15px", 
-          borderRadius: "4px",
-          fontSize: "12px",
-          fontFamily: "monospace",
-          whiteSpace: "pre-wrap",
-          wordBreak: "break-word",
-          maxHeight: "200px",
-          overflowY: "auto"
-        }}>
-          DEBUG LOG:
-          {"\n" + debugInfo}
-        </div>
-      )}
-
-      <div style={{ 
-        marginTop: "30px", 
-        padding: "15px", 
-        backgroundColor: "#e7f3ff",
-        border: "1px solid #b3d9ff",
-        borderRadius: "4px",
-        fontSize: "12px"
-      }}>
-        <strong>Test Credentials:</strong>
-        <div>Email: rahul@test.com</div>
-        <div>Password: test1234</div>
-        <hr/>
-        <strong>Debugging Tips:</strong>
-        <ul style={{margin: "10px 0", paddingLeft: "20px"}}>
-          <li>Open DevTools (F12) → Console to see detailed logs</li>
-          <li>Open DevTools → Network to see API requests</li>
-          <li>Check if error message contains useful info</li>
-          <li>Backend must be running on http://127.0.0.1:8000</li>
-        </ul>
-      </div>
+  {error && (
+    <div className="login-error">
+      {error}
     </div>
+  )}
+</form>
+</div>
   );
 }
