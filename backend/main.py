@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # -------------------------------------------------
-# App
+# App (MUST COME BEFORE ROUTERS)
 # -------------------------------------------------
 app = FastAPI(title="AI Chatbot Management System")
 
@@ -25,23 +25,23 @@ app.add_middleware(
 )
 
 # -------------------------------------------------
-# DB & Seed (IMPORT ONLY — DO NOT EXECUTE HERE)
+# DB
 # -------------------------------------------------
-from .db import init_db
+from backend.db import init_db
 
-
 # -------------------------------------------------
-# Routers
+# Routers (IMPORT AFTER app IS DEFINED)
 # -------------------------------------------------
-from .routes import auth, bots, messages
+from backend.routes import auth, bots, messages
 
 app.include_router(auth.router, prefix="/auth", tags=["Auth"])
 app.include_router(bots.router, prefix="/bots", tags=["Bots"])
 app.include_router(messages.router, tags=["Messages"])
-print("✅ Bots router loaded")
+
+print("✅ Routers loaded")
 
 # -------------------------------------------------
-# Startup (RUN ONCE)
+# Startup
 # -------------------------------------------------
 @app.on_event("startup")
 def on_startup():
@@ -49,34 +49,8 @@ def on_startup():
     init_db()
     print("✅ Database ready")
 
-# Preflight (CORS)
 # -------------------------------------------------
-@app.options("/{full_path:path}")
-async def preflight_handler(full_path: str):
-    return {"message": "OK"}
-
-# -------------------------------------------------
-# Exception handlers
-# -------------------------------------------------
-@app.exception_handler(HTTPException)
-async def http_exception_handler(request, exc):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={"detail": exc.detail},
-    )
-
-@app.exception_handler(Exception)
-async def general_exception_handler(request, exc):
-    import traceback
-    print("[ERROR]", exc)
-    print(traceback.format_exc())
-    return JSONResponse(
-        status_code=500,
-        content={"detail": "Internal server error"},
-    )
-
-# -------------------------------------------------
-# Health checks
+# Health
 # -------------------------------------------------
 @app.get("/")
 def root():
@@ -85,3 +59,17 @@ def root():
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+# -------------------------------------------------
+# Exception handlers
+# -------------------------------------------------
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request, exc):
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
+
+@app.exception_handler(Exception)
+async def general_exception_handler(request, exc):
+    import traceback
+    print("[ERROR]", exc)
+    print(traceback.format_exc())
+    return JSONResponse(status_code=500, content={"detail": "Internal server error"})

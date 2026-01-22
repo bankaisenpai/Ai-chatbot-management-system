@@ -1,4 +1,5 @@
 from sqlmodel import SQLModel, create_engine, Session
+from backend.models import User, Bot, Conversation, Message, UserMemory
 import os
 
 # Always resolve DB path relative to THIS file

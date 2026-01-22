@@ -92,3 +92,23 @@ class TrainingDataset(SQLModel, table=True):
         default_factory=dict,
         sa_column=Column(JSON)
     )
+
+class BotMemory(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+
+    bot_id: int = Field(index=True)
+    key: str = Field(index=True)
+    value: str
+
+    importance: int = Field(default=1)  # 1–5
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+
+class UserMemory(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(index=True)
+    bot_id: int = Field(index=True)
+    key: str = Field(index=True)
+    value: str
+
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
