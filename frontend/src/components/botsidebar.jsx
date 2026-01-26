@@ -1,19 +1,21 @@
+import "./botsidebar.css";
+
 export default function BotSidebar({ bots, selected, onSelect }) {
   return (
-    <div style={{ width: 200, borderRight: "1px solid #333" }}>
-      {bots.map((b) => (
-        <div
-          key={b.id}
-          onClick={() => onSelect(b)}
-          style={{
-            padding: 10,
-            cursor: "pointer",
-            background: selected.id === b.id ? "#222" : "transparent",
-          }}
-        >
-          {b.emoji} {b.name}
-        </div>
-      ))}
+    <div className="bots-sidebar-container">
+      <h4 className="bots-title">Bots</h4>
+      <div className="bots-list">
+        {bots.map((b) => (
+          <div
+            key={b.id}
+            className={`bot-item ${selected?.id === b.id ? "active" : ""}`}
+            onClick={() => onSelect(b)}
+          >
+            <span className="bot-emoji">{b.emoji}</span>
+            <span className="bot-name">{b.name}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

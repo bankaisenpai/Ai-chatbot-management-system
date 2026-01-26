@@ -3,6 +3,8 @@ from sqlmodel import Session, select
 from uuid import uuid4
 import time
 import os
+from datetime import datetime, date
+from sqlalchemy import func
 
 from fastapi.security import OAuth2PasswordBearer
 from dotenv import load_dotenv
@@ -273,3 +275,109 @@ def send_message(
         "reply": reply_text,
         "latency_ms": latency_ms,
     }
+
+@router.get("/{bot_id}/history/today")
+def get_today_history(
+    bot_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    today = date.today()
+
+    conversations = db.exec(
+        select(Conversation)
+        .where(
+            Conversation.bot_id == bot_id,
+            func.date(Conversation.created_at) == today
+        )
+        .order_by(Conversation.created_at.desc())
+    ).all()
+
+    result = []
+
+    for conv in conversations:
+        last_msg = db.exec(
+            select(Message)
+            .where(Message.conversation_id == conv.id)
+            .order_by(Message.created_at.desc())
+            .limit(1)
+        ).first()
+
+        result.append({
+            "conversation_id": conv.id,
+            "session_id": conv.session_id,
+            "last_message": last_msg.text if last_msg else "",
+            "time": conv.created_at.strftime("%H:%M"),
+        })
+
+    return result
+
+@router.get("/conversations/{conversation_id}/messages")
+def get_conversation_messages(
+    conversation_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    messages = db.exec(
+        select(Message)
+        .where(Message.conversation_id == conversation_id)
+        .order_by(Message.created_at)
+    ).all()
+
+    return [
+        {
+            "role": m.role,
+            "text": m.text,
+            "time": m.created_at.strftime("%H:%M"),
+        }
+        for m in messages
+    ]
+
+@router.delete("/conversations/{conversation_id}")
+def delete_conversation(
+    conversation_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    conv = db.get(Conversation, conversation_id)
+    if not conv:
+        raise HTTPException(status_code=404, detail="Conversation not found")
+
+    db.exec(
+        select(Message).where(Message.conversation_id == conversation_id)
+    ).delete()
+
+    db.delete(conv)
+    db.commit()
+
+    return {"status": "deleted"}
+
+# ─────────────────────────────────────────────
+# GET SESSIONS FOR A BOT
+# ─────────────────────────────────────────────
+
+@router.get("/{bot_id}/sessions")
+def get_sessions(
+    bot_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    """
+    Fetch all sessions for a specific bot ID.
+    """
+    bot = db.exec(select(Bot).where(Bot.id == bot_id)).first()
+    if not bot:
+        raise HTTPException(status_code=404, detail="Bot not found")
+
+    if bot.owner_id is not None and bot.owner_id != user.id:
+        raise HTTPException(status_code=403, detail="Access denied")
+
+    sessions = db.exec(select(Conversation).where(Conversation.bot_id == bot_id)).all()
+
+    return [
+        {
+            "conversation_id": session.id,
+            "session_id": session.session_id,
+        }
+        for session in sessions
+    ]

@@ -48,9 +48,9 @@ def send_message(
     if not conversation:
         raise HTTPException(status_code=404, detail="Session not found")
 
-    # Authorization
+    # Authorization - allow access to system bots (owner_id=None) or user-owned bots
     bot = db.get(Bot, conversation.bot_id)
-    if bot.owner_id != current_user.id:
+    if bot.owner_id is not None and bot.owner_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
 
     # ─────────────────────────────────────────────
@@ -166,7 +166,7 @@ def get_messages(
         raise HTTPException(status_code=404, detail="Session not found")
 
     bot = db.get(Bot, conversation.bot_id)
-    if bot.owner_id != current_user.id:
+    if bot.owner_id is not None and bot.owner_id != current_user.id:
         raise HTTPException(status_code=403, detail="Not authorized")
 
     messages = db.exec(

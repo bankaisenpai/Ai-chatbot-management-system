@@ -1,0 +1,101 @@
+/* Dashboard Grid Layout - ChatGPT Style */
+.dashboard {
+  display: grid;
+  grid-template-columns: 220px 260px 1fr;
+  height: 100vh;
+  width: 100vw;
+  gap: 0;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+/* Bot Sidebar - Left Column */
+.bot-sidebar {
+  grid-column: 1;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #0d0d0d;
+  border-right: 1px solid #1a1a1a;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.bot-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.bot-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.bot-sidebar::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 3px;
+}
+
+/* Session Sidebar - Middle Column */
+.session-sidebar {
+  grid-column: 2;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #0f0f0f;
+  border-right: 1px solid #1a1a1a;
+  flex-shrink: 0;
+}
+
+.session-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.session-sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.session-sidebar::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 3px;
+}
+
+/* Chat Container - Right Column */
+.chat-container {
+  grid-column: 3;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #0a0a0a;
+}
+
+/* Prevent global scrolling */
+html,
+body {
+  overflow: hidden;
+  height: 100vh;
+}
+/* Logout Button */
+.logout-btn {
+  margin-top: auto;
+  margin: 1rem;
+  padding: 0.7rem;
+  background: #dc3545;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+.logout-btn:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.logout-btn:active {
+  transform: translateY(0);
+}

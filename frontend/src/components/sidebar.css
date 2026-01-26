@@ -1,0 +1,173 @@
+/* Session Sidebar Container */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: #161616;
+  overflow: hidden;
+}
+
+/* Sidebar Title */
+.sidebar-title {
+  margin: 0;
+  padding: 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  border-bottom: 1px solid #2a2a2a;
+  flex-shrink: 0;
+}
+
+/* Sidebar Header - with New Chat button */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  border-bottom: 1px solid #2a2a2a;
+  flex-shrink: 0;
+}
+
+.sidebar-header .sidebar-title {
+  flex: 1;
+  padding: 16px;
+  border: none;
+  margin: 0;
+}
+
+/* New Chat Button */
+.new-chat-btn {
+  padding: 0;
+  margin: 8px 8px;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  background: #1a1a1a;
+  color: #d4d4d4;
+  font-size: 18px;
+  font-weight: 300;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.new-chat-btn:hover {
+  background: #242424;
+  border-color: #4f46e5;
+  color: #fff;
+}
+
+/* Empty State */
+.empty-state {
+  margin: 0;
+  padding: 20px 16px;
+  color: #555;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* Sessions List */
+.sessions-list {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.sessions-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sessions-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sessions-list::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 3px;
+}
+
+/* Session Item */
+.session-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  cursor: pointer;
+  background: transparent;
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+  user-select: none;
+  margin: 0 8px;
+  border-radius: 0 6px 6px 0;
+}
+
+.session-item:hover {
+  background: #1a1a1a;
+  border-left-color: #4f46e5;
+}
+
+.session-item.active {
+  background: #1a1a1a;
+  border-left-color: #4f46e5;
+}
+
+/* Session Content (clickable area) */
+.session-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 14px;
+  flex: 1;
+  cursor: pointer;
+}
+
+/* Delete Button */
+.session-delete-btn {
+  display: none;
+  padding: 6px 8px;
+  margin: 0 8px;
+  background: transparent;
+  border: 1px solid #dc2626;
+  border-radius: 4px;
+  color: #dc2626;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.session-item:hover .session-delete-btn {
+  display: block;
+}
+
+.session-delete-btn:hover {
+  background: #dc2626;
+  color: #fff;
+}
+
+.session-delete-btn:active {
+  opacity: 0.8;
+}
+
+/* Session Label */
+.session-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #d4d4d4;
+}
+
+/* Session Date */
+.session-date {
+  font-size: 11px;
+  color: #777;
+}
+

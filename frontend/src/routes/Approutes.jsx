@@ -1,17 +1,34 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Login from "../pages/Login";
-import Dashboard from "../pages/dashboard";
+import Register from "../pages/Register";
+import Dashboard from "../pages/Dashboard";
+
 import ProtectedRoute from "../components/ProtectedRoute";
+import PublicRoute from "../components/publicroute";
 
 export default function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* ROOT ROUTE — FIXES WARNING */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
 
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
 
         <Route
           path="/dashboard"
@@ -22,8 +39,9 @@ export default function AppRoutes() {
           }
         />
 
-        {/* OPTIONAL SAFETY NET */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* default route */}
+        <Route path="*" element={<Login />} />
+
       </Routes>
     </BrowserRouter>
   );

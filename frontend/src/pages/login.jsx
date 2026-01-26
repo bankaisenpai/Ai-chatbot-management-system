@@ -70,41 +70,45 @@ export default function Login() {
   };
 
   return (
-    
-  
-    <div className="login-card">
-      <h1>Welcome Back 👋</h1>
-      <p className="subtitle">Sign in to continue</p>
+    <div className="login-page">
+      <div className="login-card">
+        <h1>Welcome Back 👋</h1>
+        <p className="subtitle">Sign in to continue</p>
 
-      <form onSubmit={handleLogin}>
-  <label>Email</label>
-  <input
-    type="email"
-    value={email}
-    onChange={(e) => setEmail(e.target.value)}
-    placeholder="you@example.com"
-    required
-  />
+        <form onSubmit={handleLogin}>
+          <label>Email</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            required
+          />
 
-  <label>Password</label>
-  <input
-    type="password"
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-    placeholder="••••••••"
-    required
-  />
+          <label>Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            required
+          />
 
-  <button type="submit" disabled={loading}>
-    {loading ? "⏳ Logging in..." : "Login"}
-  </button>
+          <button type="submit" disabled={loading}>
+            {loading ? "⏳ Logging in..." : "Login"}
+          </button>
+          
+          {error && (
+            <div className="login-error">
+              {error}
+            </div>
+          )}
+        </form>
 
-  {error && (
-    <div className="login-error">
-      {error}
+        <p className="login-footer">
+          Don't have an account? <a href="/register">Register here</a>
+        </p>
+      </div>
     </div>
-  )}
-</form>
-</div>
   );
 }

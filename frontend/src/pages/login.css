@@ -72,3 +72,19 @@
   border-radius: 6px;
   font-size: 0.85rem;
 }
+.login-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.login-footer a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
