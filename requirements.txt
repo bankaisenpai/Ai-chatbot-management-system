@@ -5,3 +5,4 @@ python-dotenv
 passlib[bcrypt]
 pyjwt
 requests
+python-jose[cryptography]
