@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
+import os
 
 # -------------------------------------------------
 # Load environment variables
@@ -73,3 +74,7 @@ async def general_exception_handler(request, exc):
     print("[ERROR]", exc)
     print(traceback.format_exc())
     return JSONResponse(status_code=500, content={"detail": "Internal server error"})
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
