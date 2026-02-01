@@ -8,3 +8,5 @@ requests
 python-jose[cryptography]
 email-validator
 pydantic[email]
+python-multipart
+groq
