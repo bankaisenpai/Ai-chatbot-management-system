@@ -6,3 +6,5 @@ passlib[bcrypt]
 pyjwt
 requests
 python-jose[cryptography]
+email-validator
+pydantic[email]
