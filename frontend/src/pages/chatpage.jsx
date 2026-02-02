@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Sidebar from "../components/sidebar";
+import Sidebar from "../components/sidebar.jsx";
 
 export default function ChatPage() {
   const BOT_ID = 1;

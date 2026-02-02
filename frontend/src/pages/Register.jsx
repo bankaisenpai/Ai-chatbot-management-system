@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { register } from "../api/auth";
+import { register } from "../api/auth.js";
 import "./register.css";
 
 export default function Register() {

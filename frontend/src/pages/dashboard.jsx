@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Chat from "../components/chat";
-import BotSidebar from "../components/botsidebar";
-import Sidebar from "../components/sidebar";
+import Chat from "../components/chat.jsx";
+import BotSidebar from "../components/botsidebar.jsx";
+import Sidebar from "../components/sidebar.jsx";
 import "../components/dashboard.css";
 
 const bots = [
