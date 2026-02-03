@@ -1,10 +1,15 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+
+console.log("[API] Using API URL:", API_BASE_URL);
 
 // Create axios instance
 const apiClient = axios.create({
-  baseURL: API_URL,
+  baseURL: API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 // Axios interceptor to add Bearer token to all requests
