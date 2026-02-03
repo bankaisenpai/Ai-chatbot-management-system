@@ -1,11 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 
-import Login from "../pages/login.jsx";
-import Register from "../pages/register.jsx";
-import Dashboard from "../pages/dashboard.jsx";
+import Login from "../pages/login";
+import Register from "../pages/register";
+import Dashboard from "../pages/dashboard";
 
-import ProtectedRoute from "../components/protectedroute.jsx";
-import PublicRoute from "../components/publicroute.jsx";
+import ProtectedRoute from "../components/protectedroute";
+import PublicRoute from "../components/publicroute";
 
 export default function AppRoutes() {
   return (
