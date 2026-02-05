@@ -13,13 +13,22 @@ load_dotenv()
 # App (MUST COME BEFORE ROUTERS)
 # -------------------------------------------------
 app = FastAPI(title="AI Chatbot Management System")
-
+@app.post("/api/test-chat")
+def test_chat():
+    return {
+        "success": True,
+        "chat_id": "manual-test-123",
+        "message": "Backend is working"
+    }
 # -------------------------------------------------
 # Middleware
 # -------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",
+        "https://ai-chatbot-management-system.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
